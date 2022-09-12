@@ -1,0 +1,7 @@
+{
+  "name": "hotel-booking",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "safdar-azeem <safdarazeem00@gmail.com>",
+  "license": "MIT"
+}
