@@ -15,7 +15,7 @@ controller.register = async (req, res) => {
                 user.save(err => {
                     if (err) {
                         return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
-                            message: "Error while saving user"
+                            message: err.message
                         })
                     } else {
                         return res.status(STATUS.CREATED).json({
