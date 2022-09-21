@@ -1,5 +1,6 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User.modal.js')
-const STATUS = require('../config/status')
+const STATUS = require('../utils/status')
 const controller = {};
 
 controller.register = async (req, res) => {
@@ -19,7 +20,8 @@ controller.register = async (req, res) => {
                         })
                     } else {
                         return res.status(STATUS.CREATED).json({
-                            message: "User register successfully"
+                            message: "User register successfully",
+                            user: user
                         })
                     }
                 })
@@ -36,15 +38,25 @@ controller.login = async (req, res) => {
         const { email, password } = req.body;
         User.findOne({ email: email }, (err, user) => {
             if (user) {
-                if (password === user.password) {
+
+                if (user.comparePassword(password)) {
+                    const token = jwt.sign(
+                        {
+                            id: user._id,
+                        },
+                        process.env.SECRET_KEY,
+                    );
                     return res.status(STATUS.SUCCESS).json({
                         message: "Login successfully",
-                        user: user
+                        user: {
+                            ...user._doc,
+                            password: null
+                        },
+                        token
                     })
                 } else {
                     return res.status(STATUS.BAD_REQUEST).json({
                         message: "password didn't match",
-                        user: user
                     })
                 }
             } else {
