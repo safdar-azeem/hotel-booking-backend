@@ -1,6 +1,8 @@
 const User = require('../models/User.modal.js')
 const STATUS = require('../config/status')
+const dotenv = require('dotenv');
 const controller = {};
+
 
 controller.register = async (req, res) => {
     try {
@@ -55,6 +57,18 @@ controller.login = async (req, res) => {
         })
     } catch (err) {
         res.send({ message: err.message })
+    }
+}
+
+controller.loggedIn = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+
+        if (!token) return res.json(false)
+        jwt.verify(token, process.env.JWT_SECTRET)
+        res.send(true)
+    } catch (error) {
+        res.json(false)
     }
 }
 
